@@ -52,16 +52,51 @@ void runCycle(vector<set<int>>* populations, vector<int> alienNumbers, int cycle
             foreignOperations((*populations)[i]), 
             domesticOperations((*populations)[i]), 
             populations);
-
-        
     }
 }
 
 void printResult(const vector<set<int>>& populations, const vector<int>& alienNumbers){
     int index = 1;
+    vector<vector<int>> populationsVector = {};
     for(set<int> population : populations) {
+        vector<int> popVals = {};
         for(int num : population) {
-            printf("Population %d: %d\n", index, num);
+            if(popVals.size() == 0) {
+                popVals.push_back(num);
+            } else if(popVals.size() == 1) {
+                if(popVals[0] < num) {
+                    popVals.emplace(popVals.begin(),num);
+                } else {
+                    popVals.push_back(num);
+                }
+            } else {
+                bool unlocated = true;
+                int bottom = 0;
+                int top = popVals.size() - 1;
+                int mid = (bottom + top) / 2;
+                while(unlocated) {
+                    if(popVals[mid] > num) {
+                        top = mid;
+                        if(mid >= popVals.size() - 1){
+                            popVals.push_back(num);
+                            unlocated = false;
+                        } else if(popVals[mid+1] <= num) {
+                            popVals.emplace(popVals.begin()+mid+1, num);
+                            unlocated = false;
+                        }
+                    } else if(popVals[mid] < num) {
+                        mid = bottom;
+                        if(popVals[mid+1] <= num) {
+                            popVals.emplace(popVals.begin()+mid+1, num);
+                            unlocated = false;
+                        }
+                    } else popVals.emplace(popVals.begin()+mid, num);
+                    mid = (top+bottom) / 2;
+                }
+            }
+        }
+        for(int n : popVals) {
+            printf("Population %d: %d\n", index, n);
             printf("Alien %d: %d\n", index, alienNumbers[index - 1]);
             printf("\n");
         }
