@@ -63,30 +63,27 @@ void printResult(const vector<set<int>>& populations, const vector<int>& alienNu
         for(int num : population) {
             if(popVals.size() == 0) {
                 popVals.push_back(num);
-            } else if(popVals.size() == 1) {
-                if(popVals[0] < num) {
-                    popVals.emplace(popVals.begin(),num);
-                } else {
-                    popVals.push_back(num);
-                }
             } else {
                 bool unlocated = true;
                 int bottom = 0;
                 int top = popVals.size() - 1;
                 int mid = (bottom + top) / 2;
-                while(unlocated) {
+                while(unlocated) {  
                     if(popVals[mid] > num) {
                         top = mid;
-                        if(mid >= popVals.size() - 1){
-                            popVals.push_back(num);
+                        if(mid <= 0) {
+                            popVals.emplace(popVals.begin());
                             unlocated = false;
-                        } else if(popVals[mid+1] <= num) {
+                        } else if(popVals[mid-1] <= num) {
                             popVals.emplace(popVals.begin()+mid+1, num);
                             unlocated = false;
                         }
                     } else if(popVals[mid] < num) {
                         mid = bottom;
-                        if(popVals[mid+1] <= num) {
+                        if(mid >= popVals.size() - 1){
+                            popVals.push_back(num);
+                            unlocated = false;
+                        } else if(popVals[mid+1] <= num) {
                             popVals.emplace(popVals.begin()+mid+1, num);
                             unlocated = false;
                         }
@@ -102,7 +99,6 @@ void printResult(const vector<set<int>>& populations, const vector<int>& alienNu
         }
         index++;
     }
-
 }
 
 void updateSet(const vector<int>& foreignPopulation, const vector<int>& domesticPopulation, vector<set<int>>* populations){
