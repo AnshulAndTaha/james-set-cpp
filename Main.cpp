@@ -15,7 +15,7 @@ int tetrate(int base, int height) {
     int result = base;
     for(int i = 1; i < height; i++) result = std::pow(result, base);
     return result;
-}
+
 
 
 vector<int> domesticOperations(vector<int> population) {
